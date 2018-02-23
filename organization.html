@@ -1,0 +1,19 @@
+<div>
+  <? var data = getOrganization(); ?>
+    <table class="table">
+      <? for (var i = 0; i < data.length; i++) { ?>
+        <? if (data[i][0]=="") break; ?>
+        <tr>
+          <? for (var j = 0; j < data[i].length; j++) { ?>
+
+            <? if (i==0) { ?>
+              <th scope="col"><?= data[i][j] ?></th>
+            <? } else  { ?>
+              <td><?= data[i][j] ?></td>
+            <? } ?>
+
+          <? } ?>
+        </tr>
+      <? } ?>
+    </table>
+</div>
