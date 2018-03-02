@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+  <?!= include('css'); ?>
+  <?var url = getScriptUrl();?>
+  <script>
+    google.script.run
+      .withSuccessHandler(onSuccess)
+      .getAuditorTask();
+    function onSuccess(value) {
+        var task = value;
+        if(task !="Weekly"){
+          alert("You don't have permission to enter into this page.");
+          $("#wrapper input").attr("disabled", true);
+          $("#wrapper select").attr("disabled", true);
+        }
+    }
+
+  $( function() {
+    $( "#tabs" ).tabs();
+  } );
+
+  </script>
+</head>
+<body>
+<div id="wrapper">
+   <!-- Sidebar -->
+    <?!= include('sidebar'); ?>
+    <!-- /#sidebar-wrapper -->
+
+  <!-- Navigation End -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <h1>Weekly Audit</h1>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#contact"><?var mail = getMail() ?><i class="material-icons">account_circle</i><?!= mail ?></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Navigation End -->
+
+  <!-- Page Content -->
+   <div class="container" style="margin-top:70px">
+      <div class="row">
+        <div class='col-xs-4'><span class="badge badge-default">Date: <span id="today"></span></span></div>
+        <div class='col-xs-4'><span class="badge badge-default">Week: <span id="week"></span></span></div>
+        <div class='col-xs-4'><span class="badge badge-default">Needs to check&nbsp;&nbsp;: <span id="lineWeek"></span> this week.</span></div>
+      </div>
+
+      <div  class="row">
+         <div class="col-xs-6">
+             <label for="apu">APU</label>
+             <select class="custom-select" id="apu" style="width:200px">
+               <option selected>Choose...</option>
+             </select>
+         </div>
+         <div class="col-xs-6">
+             <label for="line">Line</label>
+             <select class="custom-select" id="line" style="width:200px">
+               <option selected>Choose...</option>
+             </select>
+         </div>
+      </div>
+
+        <!--Questions-->
+        <div id="content">
+          <div class="list-group">
+            <? var info =getChecklistPage("weekly") ?>
+            <? var items = info[0],arr = info[1],reqs=info[2] ?>
+            <? for (var i = 0; i < items.length; i++){ ?>
+
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h3 class="mb-1"><i class="material-icons" style="color:red">assistant_photo</i> <?= items[i] ?></h3>
+              </div>
+              <!--Items Content-->
+                 <div class="mb-1">
+                    <? for (var j = 0; j < reqs.length; j++){ ?>
+                    <? if(arr[j] == i+1) {?>
+
+                    <div class="card" data-parent="<?= items[i] ?>">
+                      <div class="card-header" ><?=j+1 ?>. <?= reqs[j] ?></div>
+                      <div class="card-body">
+                      <!--requirements content-->
+                      <div class="row">
+                        <div class="col-xs-4">
+                          <input type="radio" id="radio<?=j+1 ?>" name="radio<?=j+1 ?>" class="custom-control-input"  aria-expanded="false">
+                          <label class="custom-control-label" for="ok<?=j+1 ?>">OK</label>
+                        </div>
+                        <div class="col-xs-4">
+                          <input type="radio" id="radio<?=j+1 ?>" name="radio<?=j+1 ?>" class="custom-control-input" data-toggle="collapse" data-target="#results<?=j+1 ?>" aria-expanded="false" >
+                          <label class="custom-control-label" for="ok<?=j+1 ?>">NOK</label>
+                        </div>
+                        <div class="col-xs-4">
+                          <input type="radio" id="radio<?=j+1 ?>" name="radio<?=j+1 ?>" class="custom-control-input"  aria-expanded="false">
+                          <label class="custom-control-label" for="na<?=j+1 ?>">NA</label>
+                        </div>
+                      </div>
+
+                      <div class="row collapse" id="results<?=j+1 ?>">
+
+                        <div class="col-xs-6">
+                          <span  for="station">工位/Station</span>
+                          <input type="text" placeholder="Station" aria-label="Station"  id="station">
+                        </div>
+
+                        <div class="col-xs-6">
+                          <span  for="classification">问题类型/Issue Classification</span>
+                          <select type="text" placeholder="Classification" aria-label="Classification" id="classification">
+                            <option value="Man">Man</option>
+                            <option value="Method">Method</option>
+                            <option value="Material">Material</option>
+                            <option value="Machine">Machine</option>
+                            <option value="Measurement">Measurement</option>
+                            <option value="Environment">Environment</option>
+                          </select>
+                        </div>
+
+                        <div class="col-xs-12">
+                          <div class="input-group-prepend">
+                            <span  for="description">问题类型/Issue Classification</span>
+                            <div>
+                              <textarea id="description" style="width:100%;height:50px;"></textarea>
+                            </div>
+
+                            <div class="col-xs-12">
+                              <div class="input-group-prepend">
+                                <span  for="description">拍照/Take a  photo</span>
+                                <div>
+                                  <input type="file" id="file">
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+         <!--requirements content-->
+
+                      </div>
+                    </div>
+                      <? }else{ continue; }?>
+                      <? } ?>
+                 </div>
+              <!--Items Content-->
+            </div>
+            <? }?>
+          </div>
+        </div>
+       <!-- end of container -->
+
+        <!--Questions End-->
+
+   </div>
+      <!-- END -->
+  </div>
+
+<!-- /#page-content -->
+
+<!-- /#wrapper -->
+
+
+</body>
+</html>
+
+
+<script>
+$(document).ready( function() {
+  todayDate();
+  fillAuto();
+
+});
+function todayDate(){
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = date.getMonth()+1;
+  var day = date.getDate();
+
+  var firstDay = new Date(year, 0, 1);
+  var dayOfWeek = firstDay.getDay();
+  var spendDay = 1;
+  if (dayOfWeek !=0) spendDay = 7 - dayOfWeek + 1;
+  firstDay = new Date(year,0,1+spendDay);
+
+  var d = Math.ceil((date.valueOf()-firstDay.valueOf()) / 86400000);
+  var result = Math.ceil(d/7);
+  var week = result +1;
+
+  $("#today").html(year +"-"+month +"-"+ day);
+  $("#week").html("WK"+week);
+
+}
+
+// autofill data in "#line"
+function fillAuto(){
+  google.script.run.withSuccessHandler(auto_apu_line).get_apu_Line("weekly");
+}
+
+function auto_apu_line(value){
+  var lines = [],
+   wk = $("#week").html(),
+   lineWeek = "",
+   apu = value[0],
+   val = value[1],
+   wks = value[2];
+
+   wk="WK50";
+   console.log(wk);
+   console.log(val);
+
+   for(var i=0;i<wks.length;i++){
+//   console.log(wks[i]);
+     if(wk===wks[i]){
+      lineWeek += val[i][1].toString()+"&nbsp;&nbsp;&nbsp;&nbsp;";
+     }
+   }
+    $("#lineWeek").html(lineWeek);
+
+   for(var i=1;i<apu.length;i++){
+     $("#apu").append("<option value='"+apu[i]+"'>"+apu[i]+"</option>");
+   }
+   $("#apu").on('change',function(){
+    $("#line").empty().append("<option selected>Choose...</option>");
+     var a = $("#apu").val(),
+         temp;
+
+     for(var i=1;i<val.length;i++){
+       if(a==val[i][0]){
+         temp=val[i][1].toString();
+         console.log(temp);
+         $("#line").append("<option value='"+temp+"'>"+temp+"</option>");
+       }
+     }
+
+    });
+
+
+}
+
+var info,items,arr,requirements;
+function autoChecklistPage(details){
+  info=details;
+  items=info[0];
+  arr=info[1];
+  requirements=info[2];
+}
+
+</script>
+
+<style>
+ .ui-autocomplete {
+    max-height: 200px;
+    max-width: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* add padding to account for vertical scrollbar */
+    padding-right: 20px;
+    border-bottom: 2px solid gray;
+  }
+   body {
+      font: 400 15px Lato, sans-serif;
+      line-height: 1.8;
+
+  }
+  .container{
+   margin-left:-15px;
+   padding:0px;
+
+  }
+   .navbar {
+      margin-bottom: 0;
+      z-index: 9999;
+      border: 0;
+      font-size: 12px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      font-family: Montserrat, sans-serif;
+      margin-left: 50px;
+  }
+  .navbar li a, .navbar .navbar-brand {
+      color: #000 !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #f4511e !important;
+      background-color: #fff !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+  .content{
+    width:90%;
+  }
+  .card-header{
+    background-color: rgba(0,0,0,.05);
+
+  }
+
+
+}
+</style>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <?!= include('CSS'); ?>
+  <?!= include('css'); ?>
   <?var url = getScriptUrl();?>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>
@@ -12,7 +12,7 @@
     function onSuccess(value) {
         var task = value;
 
-        if(task !="Weekly"){
+        if(task !="Daily"){
           alert("You don't have permission to enter into this page.");
           $("#page-content-wrapper :input").prop('readonly', true);
         }
@@ -23,26 +23,14 @@
 <body>
 <div id="wrapper">
     <!-- Sidebar -->
-    <?!= include('Sidebar'); ?>
+    <?!= include('sidebar'); ?>
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--Content -->
-            <h1>Weekly Audit</h1>
-            <div class="d-flex flex-row">
-              <div class="p-2 text-success">Date: <label id="today"></label></div>
-              <div class="p-2 text-success">Week: <label id="week"></label></div>
-            </div>
-            <div class="input-group">
-              <div class="input-group-prepend">
-              <span class="input-group-text"><i class="glyphicon glyphicon-tasks" ></i>生产线Line:</span>
-              </div>
-             <input  class="line" id="line" style ='width:200px'>
-            </div>
-            <!-- END -->
-
+            <h1>Daily</h1>
+            <input>
         </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -57,28 +45,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
-$(document).ready( function() {
-  todayDate();
+
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
 });
-function todayDate(){
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = date.getMonth()+1;
-  var day = date.getDate();
-
-  var firstDay = new Date(year, 0, 1);
-  var dayOfWeek = firstDay.getDay();
-  var spendDay = 1;
-  if (dayOfWeek !=0) spendDay = 7 - dayOfWeek + 1;
-  firstDay = new Date(year,0,1+spendDay);
-
-  var d = Math.ceil((date.valueOf()-firstDay.valueOf()) / 86400000);
-  var result = Math.ceil(d/7);
-  var week = result +1;
-
-  $("#today").html(year +"-"+month +"-"+ day);
-  $("#week").html("WK"+week);
-}
 
 
 </script>

@@ -1,15 +1,17 @@
 <div>
-  <? var data = getOrganization(); ?>
+
+  <? var organization = getOrganization(); ?>
+
     <table class="table">
-      <? for (var i = 0; i < data.length; i++) { ?>
-        <? if (data[i][0]=="") break; ?>
+      <? for (var i = 0; i < organization.length; i++) { ?>
+        <? if (organization[i][0]=="") break; ?>
         <tr>
-          <? for (var j = 0; j < data[i].length; j++) { ?>
+          <? for (var j = 0; j < organization[i].length; j++) { ?>
 
             <? if (i==0) { ?>
-              <th scope="col"><?= data[i][j] ?></th>
+              <th scope="col"><?= organization[i][j] ?></th>
             <? } else  { ?>
-              <td><?= data[i][j] ?></td>
+              <td><?= organization[i][j] ?></td>
             <? } ?>
 
           <? } ?>
